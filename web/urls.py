@@ -4,6 +4,8 @@ from django.conf.urls.defaults import *
 # from django.contrib import admin
 # admin.autodiscover()
 
+from app import views
+
 urlpatterns = patterns('',
     # Example:
     # (r'^web/', include('web.foo.urls')),
@@ -14,4 +16,7 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     # (r'^admin/', include(admin.site.urls)),
+    url(r'^$', views.default,
+        name='app-default'),
+
 )
