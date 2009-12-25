@@ -8,7 +8,7 @@ class Reading(models.Model):
     A Reading from the CC meter
     """
     time = models.DateTimeField()
-    temperature = models.DecimalField()
+    temperature = models.DecimalField(max_digits = 8, decimal_places = 2)
 
 class SensorReading(models.Model):
     """
@@ -16,5 +16,5 @@ class SensorReading(models.Model):
     """
     meter_id = models.CharField(max_length = 5)
     meter_type = models.IntegerField()
-    wattage = models.DecimalField()
+    wattage = models.DecimalField(max_digits = 8, decimal_places = 2)
     reading = models.ForeignKey(Reading)    
