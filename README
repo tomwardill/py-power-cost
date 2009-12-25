@@ -1,0 +1,4 @@
+A project to work with the current cost meters.
+
+A small daemon to read the serial interface, and log it locally
+A web interface to take uploads from the daemon and to display it with pretty graphs
