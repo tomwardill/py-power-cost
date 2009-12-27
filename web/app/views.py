@@ -24,7 +24,7 @@ def upload(request):
     if not post.has_key('reading'):
         return HttpResponseNotAllowed()
     
-    raw_reading = json.dumps(post['reading'])
+    raw_reading = json.loads(post['reading'])
     reading = Reading()
     reading.time = datetime(raw_reading['time'])
     reading.temperature = raw_reading['temperature']
