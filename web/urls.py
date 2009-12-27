@@ -18,5 +18,7 @@ urlpatterns = patterns('',
     # (r'^admin/', include(admin.site.urls)),
     url(r'^$', views.default,
         name='app-default'),
+    url(r'^upload/$', views.upload,
+        name='app-upload'),
 
 )
