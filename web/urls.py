@@ -20,5 +20,7 @@ urlpatterns = patterns('',
         name='app-default'),
     url(r'^upload/$', views.upload,
         name='app-upload'),
+    url(r'^raw/$', views.raw_view,
+        name='app-raw'),
 
 )

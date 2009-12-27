@@ -4,6 +4,8 @@ from models import Reading
 
 from datetime import datetime
 from django.http import HttpResponse, HttpResponseNotAllowed
+from django.template import RequestContext
+from django.shortcuts import render_to_response
 import simplejson as json
 from decimal import Decimal
 from dateutil import parser
@@ -52,3 +54,11 @@ def upload(request):
     reading.save()
 
     return HttpResponse('Upload')
+
+def raw_view(request):
+    
+    items = Reading.objects.all()
+    
+    return render_to_response('raw.html', 
+                              {'items': items}, 
+                              context_instance = RequestContext(request))

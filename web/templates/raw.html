@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<table>
+    <thead>
+        <th>ID</th>
+        <th>Time</th>
+        <th>Temperature</th>
+        <th>Meter ID</th>
+        <th>Meter Type</th>
+        <th>CH1 Wattage</th>
+        <th>CH2 Wattage</th>
+        <th>CH3 Wattage</th>
+    </thead>
+    <tbody>
+        {% for item in items %}
+        <tr> 
+            <td>{{ item.id }}</td>
+            <td>{{ item.time }}</td>
+            <td>{{ item.temperature }}</td>
+            <td>{{ item.meter_id }}</td>
+            <td>{{ item.meter_type }}</td>
+            <td>{{ item.ch1_wattage }}</td>
+            <td>{{ item.ch2_wattage }}</td>
+            <td>{{ item.ch3_wattage }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock content %}
