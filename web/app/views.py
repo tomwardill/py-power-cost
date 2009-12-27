@@ -9,6 +9,9 @@ from django.shortcuts import render_to_response
 import simplejson as json
 from decimal import Decimal
 from dateutil import parser
+import simplejson as json
+from datetime import datetime, timedelta
+import time
 
 
 def default(request):
@@ -62,3 +65,45 @@ def raw_view(request):
     return render_to_response('raw.html', 
                               {'items': items}, 
                               context_instance = RequestContext(request))
+
+def hour(request):
+    
+    return render_to_response('graph.html',
+                              {'mode': 'hour'},
+                              context_instance = RequestContext(request))
+    
+def day(request):
+    return render_to_response('graph.html',
+                              {'mode': 'day'},
+                              context_instance = RequestContext(request))
+def week(request):
+    pass
+def month(request):
+    pass
+def all_time(request):
+    pass
+
+def data_hour(request):
+    
+    previous_hour = datetime.now() - timedelta(hours = 1)
+    
+    data = Reading.objects.filter(time__range = (previous_hour, datetime.now()))
+    graph_data = [[time.mktime(k.time.timetuple()) * 1000, float(k.ch1_wattage)] for k in data]
+    json_data = json.dumps(graph_data)
+    
+    return HttpResponse(json_data)
+    
+def data_day(request):
+    previous_hour = datetime.now() - timedelta(days = 1)
+    
+    data = Reading.objects.filter(time__range = (previous_hour, datetime.now()))
+    graph_data = [[time.mktime(k.time.timetuple()) * 1000, float(k.ch1_wattage)] for k in data]
+    json_data = json.dumps(graph_data)
+    
+    return HttpResponse(json_data)
+def data_week(request):
+    pass
+def data_month(request):
+    pass
+def data_all_time(request):
+    pass

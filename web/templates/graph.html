@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div id="placeholder_depth" style="width:600px;height:300px;"></div>
+
+
+<script id="source" language="javascript" type="text/javascript">
+function update_depth(data)
+    {
+        $.plot($("#placeholder_depth"), 
+           [data], { xaxis: { mode: "time" } }
+        );
+    }
+    
+    $.ajax({
+        url: '/data/{{mode}}/',
+        method: 'GET',
+        dataType: 'json',
+        success: update_depth
+        });
+</script>
+
+{% endblock content %}
