@@ -12,6 +12,6 @@ class Reading(models.Model):
     meter_id = models.CharField(max_length = 5)
     meter_type = models.IntegerField()
     ch1_wattage = models.DecimalField(max_digits = 8, decimal_places = 2)
-    ch2_wattage = models.DecimalField(max_digits = 8, decimal_places = 2)
-    ch3_wattage = models.DecimalField(max_digits = 8, decimal_places = 2)
+    ch2_wattage = models.DecimalField(max_digits = 8, decimal_places = 2, null = True)
+    ch3_wattage = models.DecimalField(max_digits = 8, decimal_places = 2, null = True)
   

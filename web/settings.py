@@ -1,3 +1,8 @@
+try:
+    import wingdbstub
+except:
+    pass
+
 # Django settings for web project.
 
 DEBUG = True
