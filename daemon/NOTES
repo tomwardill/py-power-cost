@@ -1,0 +1,2 @@
+The data will have to be stored with a datetime.
+Currently, the logs only output the time, not the data
