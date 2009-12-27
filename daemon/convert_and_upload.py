@@ -16,6 +16,11 @@ def convert(msg):
     
     # parse xml into dict
     tree = etree.parse(io)
+    
+    # check we have a msg we're interested in
+    if not tree.xpath('//tmpr'):
+        return None
+    
     data['time'] = tree.xpath('//time')[0].text
     data['temperature'] = tree.xpath('//tmpr')[0].text
     data['sensor_id'] = tree.xpath('//id')[0].text
@@ -45,6 +50,9 @@ def upload(msg, server_url):
 
 def convert_and_upload(msg):
     converted = convert(msg)
-    result = upload(converted, server_url)
-    return result
+    if converted:
+        result = upload(converted, server_url)
+        return result
+    else:
+        return None
 
