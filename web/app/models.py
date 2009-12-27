@@ -9,12 +9,9 @@ class Reading(models.Model):
     """
     time = models.DateTimeField()
     temperature = models.DecimalField(max_digits = 8, decimal_places = 2)
-
-class SensorReading(models.Model):
-    """
-    A value from a sensor, related to a reading taken at a particular time
-    """
     meter_id = models.CharField(max_length = 5)
     meter_type = models.IntegerField()
-    wattage = models.DecimalField(max_digits = 8, decimal_places = 2)
-    reading = models.ForeignKey(Reading)    
+    ch1_wattage = models.DecimalField(max_digits = 8, decimal_places = 2)
+    ch2_wattage = models.DecimalField(max_digits = 8, decimal_places = 2)
+    ch3_wattage = models.DecimalField(max_digits = 8, decimal_places = 2)
+  

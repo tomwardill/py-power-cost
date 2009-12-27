@@ -28,17 +28,12 @@ def upload(request):
     reading = Reading()
     reading.time = datetime(raw_reading['time'])
     reading.temperature = raw_reading['temperature']
+    reading.meter_id = raw_reading['sensor_id']
+    reading.meter_type = raw_reading['meter_type']
+    reading.ch1_wattage = raw_reading['ch1']
+    reading.ch2_wattage = raw_reading['ch2']
+    reading.ch3_wattage = raw_reading['ch3']
+    
     reading.save()
-    
-    # read sensor data out of sublist of dicts
-    # 1 sensor data = 1 SensorReading
-    
-    for sens in reading['sensors']:
-        s = SensorReading()
-        s.meter_id = sens['meter_id']
-        s.meter_type = sens['meter_type']
-        s.wattage = sens['wattage']
-        s.reading = reading
-        s.save()
     
     return HttpResponse('Upload')
