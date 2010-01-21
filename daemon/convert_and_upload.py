@@ -8,8 +8,12 @@ import urllib
 import urllib2
 
 server_url = "http://localhost:8000/upload/"
+bulk_server_url = "http://localhost:8000/bulk_upload/"
 
 def convert(msg):
+
+    if not msg:
+        return None
 
     io = StringIO(msg)
     data = {}
@@ -48,6 +52,25 @@ def upload(msg, server_url):
     return_values = response.read()
     return return_values
 
+def bulk_upload(data, server_url):
+
+
+    values = {'data': data}
+
+
+    send_data = urllib.urlencode(values)
+    req = urllib2.Request(server_url, send_data)
+    try:
+        response = urllib2.urlopen(req)
+        return_values = response.read()
+        return return_values
+    except Exception, err:
+        print err
+#    f = open('converted.json', 'w')
+#    f.write(data)
+#    f.close()
+
+
 def convert_and_upload(msg):
     converted = convert(msg)
     if converted:
@@ -56,3 +79,34 @@ def convert_and_upload(msg):
     else:
         return None
 
+def bulk_convert_and_upload(msgs):
+    data = []
+    
+    chunks = []
+
+    ret_vals = []
+
+    # chunk msgs
+    if len(msgs) > 500:
+        count = len(msgs) / 500
+        current = 0
+        prev = 0
+        for x in range(count):
+            current = (x + 1) * 500
+            chunks.append(msgs[prev:current])
+            prev = current
+        chunks.append(msgs[current:])
+    else:
+        chunks.append(msgs)
+    
+    for chunk in chunks:
+        for msg in chunk:
+
+            converted = convert(msg)
+            if converted:
+                data.append(converted)
+
+        final = json.dumps(data)
+        ret_vals.append(bulk_upload(final, bulk_server_url))
+
+    return ret_vals

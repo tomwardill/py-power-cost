@@ -20,6 +20,7 @@ def default(request):
 def _process_message(data):
     """ Process a data message and save it """
 
+
     reading_date = parser.parse(data['time'])
     try:
         # Check if the reading for this time already exists (ignore if so)
@@ -56,7 +57,7 @@ def bulk_upload(request):
     # assume that the data is a list/something iterable
     for data in raw_data:
         # process and save each one in the list
-        _process_message(data)
+        _process_message(json.loads(data))
 
     return HttpResponse('Upload')
 

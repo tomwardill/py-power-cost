@@ -23,7 +23,9 @@ urlpatterns = patterns('',
         name='app-upload'),
     url(r'^raw/$', views.raw_view,
         name='app-raw'),
-    
+    url(r'^bulk_upload/$', views.bulk_upload,
+        name='app-bulk_upload'),
+
     url(r'^hour/$', views.hour,
         name='app-hour'),
     url(r'^day/$', views.day,
