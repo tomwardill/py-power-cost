@@ -16,7 +16,21 @@ import urllib2
 from datetime import datetime
 
 server_url = "http://localhost:8000/upload/"
-bulk_server_url = "http://localhost:8000/bulk_upload/"
+bulk_server_url = "http://10.0.0.8:8000/bulk_upload/"
+
+def convert_row_to_dict(row):
+    """ Convert a db row into a dictionary """
+    data = {}
+    data['time'] = row[0]
+    data['temperature'] = row[1]
+    data['sensor_id'] = row[2]
+    data['meter_type'] = row[3]
+
+    data['ch1'] = row[4]
+    data['ch2'] = row[5]
+    data['ch3'] = row[6]
+
+    return data
 
 def convert_to_dict(msg):
 
@@ -74,6 +88,37 @@ def bulk_upload(data, server_url):
 #    f.write(data)
 #    f.close()
 
+def bulk_upload_dicts(dicts):
+
+    chunks = []
+    ret_vals = []
+
+    # chunk the messages ino groups of 500
+    # otherwise we exceed server upload limits
+    if len(dicts) > 200:
+        count = len(dicts) / 200
+        current = 0
+        prev = 0
+        for x in range(count):
+            current = (x + 1) * 200
+            chunks.append(dicts[prev:current])
+            prev = current
+        chunks.append(dicts[current:])
+    else:
+        chunks.append(dicts)
+
+    # iterate over the chunks and convert to json
+
+    for chunk in chunks:
+        data = []
+        for msg in chunk:
+            converted = json.dumps(msg)
+            data.append(converted)
+        # convert the final lot and upload
+        final = json.dumps(data)
+        ret_vals.append(bulk_upload(final, bulk_server_url))
+
+    return ret_vals
 
 def convert_and_upload(msg):
     converted = convert(msg)
