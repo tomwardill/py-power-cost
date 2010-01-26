@@ -14,7 +14,7 @@ function update_depth(data)
     }
     
     $.ajax({
-        url: '/data/{{mode}}/',
+        url: '{% url app-data %}{{mode}}/', 
         method: 'GET',
         dataType: 'json',
         success: update_depth

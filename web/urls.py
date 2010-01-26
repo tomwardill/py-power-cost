@@ -37,6 +37,10 @@ urlpatterns = patterns('',
     url(r'^all_time/$', views.all_time,
         name='app-all_time'),
 
+    # little bit of a hack, but makes the graph templates cleaner
+    url(r'^data/$', views.data,
+        name='app-data'),
+
     url(r'^data/hour/$', views.data_hour,
         name='app-data_hour'),
     url(r'^data/day/$', views.data_day,

@@ -90,6 +90,9 @@ def raw_view(request):
                               {'items': items}, 
                               context_instance = RequestContext(request))
 
+def data(request):
+    return HttpResponse('data')
+
 def hour(request):
     
     return render_to_response('graph.html',
