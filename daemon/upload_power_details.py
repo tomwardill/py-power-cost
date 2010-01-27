@@ -7,7 +7,7 @@ import os, sys
 # open db connection
 # get current dir
 current_dir = path.dirname(__file__)
-conn = sqlite3.connect(os.path.join(current_dir), 'daemon-data.db'))
+conn = sqlite3.connect(os.path.join(current_dir), 'daemon-data.db')
 
 # get all the saved data
 raw_data = conn.execute(''' select * from powercost ''')
