@@ -2,8 +2,12 @@ import sqlite3
 
 import cctools
 
+import os, sys
+
 # open db connection
-conn = sqlite3.connect('daemon-data.db')
+# get current dir
+current_dir = path.dirname(__file__)
+conn = sqlite3.connect(os.path.join(current_dir), 'daemon-data.db'))
 
 # get all the saved data
 raw_data = conn.execute(''' select * from powercost ''')
