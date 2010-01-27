@@ -16,7 +16,7 @@ import urllib2
 from datetime import datetime
 
 server_url = "http://localhost:8000/upload/"
-bulk_server_url = "http://10.0.0.8:8000/bulk_upload/"
+bulk_server_url = "http://howrandom.net/bits/py-power-cost/bulk_upload/"
 
 def convert_row_to_dict(row):
     """ Convert a db row into a dictionary """
@@ -78,12 +78,9 @@ def bulk_upload(data, server_url):
 
     send_data = urllib.urlencode(values)
     req = urllib2.Request(server_url, send_data)
-    try:
-        response = urllib2.urlopen(req)
-        return_values = response.read()
-        return return_values
-    except Exception, err:
-        print err
+    response = urllib2.urlopen(req)
+    return_values = response.read()
+    return return_values
 #    f = open('converted.json', 'w')
 #    f.write(data)
 #    f.close()

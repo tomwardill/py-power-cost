@@ -19,9 +19,10 @@ try:
     cctools.bulk_upload_dicts(converted_data)
 
 # if successful, remove from db
-    for row in raw_data:
+    for row in list_data:
         t = (row[0], )
-        conn.execute(''' delete from powercost where date = ? ''', t)
+        conn.execute(''' delete from powercost where date = ?''', t)
+        conn.commit()
 
 except Exception, err:
     print err
