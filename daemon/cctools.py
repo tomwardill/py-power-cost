@@ -22,13 +22,13 @@ def convert_row_to_dict(row):
     """ Convert a db row into a dictionary """
     data = {}
     data['time'] = row[0]
-    data['temperature'] = row[1]
-    data['sensor_id'] = row[2]
-    data['meter_type'] = row[3]
+    data['temperature'] = float(row[1])
+    data['sensor_id'] = str(row[2])
+    data['meter_type'] = str(row[3])
 
-    data['ch1'] = row[4]
-    data['ch2'] = row[5]
-    data['ch3'] = row[6]
+    data['ch1'] = float(row[4])
+    data['ch2'] = float(row[5])
+    data['ch3'] = float(row[6])
 
     return data
 
@@ -113,6 +113,7 @@ def bulk_upload_dicts(dicts):
             data.append(converted)
         # convert the final lot and upload
         final = json.dumps(data)
+        print final
         ret_vals.append(bulk_upload(final, bulk_server_url))
 
     return ret_vals
