@@ -1,30 +1,38 @@
-import sqlite3
-
+import psycopg2
 import cctools
 
+import os, sys
+
 # open db connection
-conn = sqlite3.connect('daemon-data.db')
+# get current dir
+current_dir = os.path.dirname(__file__)
+conn = psycopg2.connect("dbname='powercost' user='powercost' host='localhost' password='costpower'")
+cur = conn.cursor()
 
 # get all the saved data
-raw_data = conn.execute(''' select * from powercost ''')
+cur.execute(''' select * from powercost ''')
+raw_data = cur.fetchall()
 
 # convert it to the correct form
-list_data = raw_data.fetchall()
+list_data = raw_data
 converted_data = []
 for row in list_data:
-    converted_data.append(cctools.convert_row_to_dict(row))
+    converted_row = cctools.convert_row_to_dict(row)
+    converted_data.append(converted_row)
 
 # upload it to server
 try:
     cctools.bulk_upload_dicts(converted_data)
 
 # if successful, remove from db
-    for row in raw_data:
-        t = (row[0], )
-        conn.execute(''' delete from powercost where date = ? ''', t)
+    for row in list_data:
+        sql_string = "delete from powercost where date = '%(date)s'" % {'date': str(row[0])}
+        cur.execute(sql_string)
+        conn.commit()
 
 except Exception, err:
     print err
+    print err.read()
 # if not successful, give up (running script again will try again)
 
 

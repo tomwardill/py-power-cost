@@ -16,19 +16,19 @@ import urllib2
 from datetime import datetime
 
 server_url = "http://localhost:8000/upload/"
-bulk_server_url = "http://10.0.0.8:8000/bulk_upload/"
+bulk_server_url = "http://howrandom.net/bits/py-power-cost/bulk_upload/"
 
 def convert_row_to_dict(row):
     """ Convert a db row into a dictionary """
     data = {}
     data['time'] = row[0]
-    data['temperature'] = row[1]
-    data['sensor_id'] = row[2]
-    data['meter_type'] = row[3]
+    data['temperature'] = float(row[1])
+    data['sensor_id'] = str(row[2])
+    data['meter_type'] = str(row[3])
 
-    data['ch1'] = row[4]
-    data['ch2'] = row[5]
-    data['ch3'] = row[6]
+    data['ch1'] = float(row[4])
+    data['ch2'] = float(row[5])
+    data['ch3'] = float(row[6])
 
     return data
 
@@ -38,8 +38,6 @@ def convert_to_dict(msg):
 
     if not msg:
         return None
-
-    print msg
 
     io = StringIO(msg)
     data = {}
@@ -78,12 +76,9 @@ def bulk_upload(data, server_url):
 
     send_data = urllib.urlencode(values)
     req = urllib2.Request(server_url, send_data)
-    try:
-        response = urllib2.urlopen(req)
-        return_values = response.read()
-        return return_values
-    except Exception, err:
-        print err
+    response = urllib2.urlopen(req)
+    return_values = response.read()
+    return return_values
 #    f = open('converted.json', 'w')
 #    f.write(data)
 #    f.close()
