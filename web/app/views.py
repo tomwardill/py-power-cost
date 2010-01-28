@@ -32,14 +32,14 @@ def _process_message(data):
     # Save the reading into the DB
     reading = Reading()
     reading.time = reading_date
-    reading.temperature = Decimal(data['temperature'])
+    reading.temperature = Decimal(str(data['temperature']))
     reading.meter_id = data['sensor_id']
     reading.meter_type = int(data['meter_type'])
-    reading.ch1_wattage = Decimal(data['ch1'])
+    reading.ch1_wattage = Decimal(str(data['ch1']))
     if data.has_key('ch2'):
-        reading.ch2_wattage = Decimal(data['ch2'])
+        reading.ch2_wattage = Decimal(str(data['ch2']))
     if data.has_key('ch3'):
-        reading.ch3_wattage = Decimal(data['ch3'])
+        reading.ch3_wattage = Decimal(str(data['ch3']))
     
     reading.save()
 
