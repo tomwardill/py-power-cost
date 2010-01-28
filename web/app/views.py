@@ -114,7 +114,7 @@ def data_hour(request):
     
     previous_hour = datetime.now() - timedelta(hours = 1)
     
-    data = Reading.objects.filter(time__range = (previous_hour, datetime.now()))
+    data = Reading.objects.filter(time__range = (previous_hour, datetime.now())).order_by('time')
     graph_data = [[time.mktime(k.time.timetuple()) * 1000, float(k.ch1_wattage)] for k in data]
     json_data = json.dumps(graph_data)
     
@@ -123,7 +123,7 @@ def data_hour(request):
 def data_day(request):
     previous_hour = datetime.now() - timedelta(days = 1)
     
-    data = Reading.objects.filter(time__range = (previous_hour, datetime.now()))
+    data = Reading.objects.filter(time__range = (previous_hour, datetime.now())).order_by('time')
     graph_data = [[time.mktime(k.time.timetuple()) * 1000, float(k.ch1_wattage)] for k in data]
     json_data = json.dumps(graph_data)
     
