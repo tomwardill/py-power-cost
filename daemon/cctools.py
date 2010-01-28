@@ -39,8 +39,6 @@ def convert_to_dict(msg):
     if not msg:
         return None
 
-    print msg
-
     io = StringIO(msg)
     data = {}
     
@@ -113,7 +111,6 @@ def bulk_upload_dicts(dicts):
             data.append(converted)
         # convert the final lot and upload
         final = json.dumps(data)
-        print final
         ret_vals.append(bulk_upload(final, bulk_server_url))
 
     return ret_vals
