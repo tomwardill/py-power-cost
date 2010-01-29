@@ -15,7 +15,7 @@ import time
 
 
 def default(request):
-    return HttpResponse("Whoop")
+    return render_to_response('main.html', context_instance = RequestContext(request))
 
 def _process_message(data):
     """ Process a data message and save it """

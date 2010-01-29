@@ -1,0 +1,21 @@
+
+
+/* MENU */
+
+#menu {
+    background-color: #EFEFEF;
+    height: 24px;
+}
+
+#menu ul {
+    list-style-type: none;
+}
+#menu li {
+    float: right;
+    padding: 2px;
+}
+#menu li a {
+    text-decoration: none;
+}
+
+/* END MENU */
