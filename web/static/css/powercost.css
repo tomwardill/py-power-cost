@@ -1,3 +1,10 @@
+/* FRONT PAGE */
+
+body {
+    font-family:"Helvetica";
+}
+
+/* END FRONT PAGE */
 
 
 /* MENU */
@@ -8,7 +15,7 @@
 }
 
 #menu ul {
-    list-style-type: none;
+   
 }
 #menu li {
     float: right;
@@ -19,3 +26,25 @@
 }
 
 /* END MENU */
+
+/* TIME MENU */
+
+#timeselector {
+    background-color: #EFEFEF;
+    height: 24px;
+    text-align: center;
+}
+
+#timeselector ul {
+    list-style-type: none;
+}
+
+#timeselector li {
+    padding: 2px;
+    display: inline;
+}
+
+#timeselector li a {
+}
+
+/* END TIME MENU */

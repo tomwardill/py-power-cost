@@ -93,14 +93,15 @@ def raw_view(request):
 def data(request):
     return HttpResponse('data')
 
-def hour(request):
+def hour(request, hours = None):
     
-    return render_to_response('graph.html',
-                              {'mode': 'hour'},
+    return render_to_response('hour_graph.html',
+                              {'mode': 'hour',
+                              'hours': hours},
                               context_instance = RequestContext(request))
     
 def day(request):
-    return render_to_response('graph.html',
+    return render_to_response('day_graph.html',
                               {'mode': 'day'},
                               context_instance = RequestContext(request))
 def week(request):
@@ -110,11 +111,21 @@ def month(request):
 def all_time(request):
     pass
 
-def data_hour(request):
+def data_hour(request, hours = None):
     
-    previous_hour = datetime.now() - timedelta(hours = 1)
+    try:
+        hours = int(hours)
+    except:
+        hours = None
     
-    data = Reading.objects.filter(time__range = (previous_hour, datetime.now())).order_by('time')
+    if not hours:
+        previous_hour = datetime.now() - timedelta(hours = 1)
+        current_hour = datetime.now()
+    else:
+        previous_hour = datetime.now() - timedelta(hours = 1 + hours)
+        current_hour = datetime.now() - timedelta(hours = hours)
+    
+    data = Reading.objects.filter(time__range = (previous_hour, current_hour)).order_by('time')
     graph_data = [[time.mktime(k.time.timetuple()) * 1000, float(k.ch1_wattage)] for k in data]
     json_data = json.dumps(graph_data)
     

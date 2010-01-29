@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block pagetitle %}
+<h2>Last hour of power usage</h2>
+{% endblock pagetitle %}
+
+{% block content %}
+
+<div id="timeselector">
+    
+    <ul>
+        <li><a href="{% url app-hour %}">Current</a></li>
+        <li><a href="{% url app-hour %}01">1</a></li>
+        <li><a href="{% url app-hour %}02">2</a></li>
+        <li><a href="{% url app-hour %}03">3</a></li>
+        <li><a href="{% url app-hour %}04">4</a></li>
+        <li><a href="{% url app-hour %}05">5</a></li>
+        <li><a href="{% url app-hour %}06">6</a></li>
+        <li><a href="{% url app-hour %}07">7</a></li>
+        <li><a href="{% url app-hour %}08">8</a></li>
+        <li<a href="{% url app-hour %}09">9</a></li>
+        <li><a href="{% url app-hour %}10">10</a></li>
+        <li><a href="{% url app-hour %}11">11</a></li>
+        <li><a href="{% url app-hour %}12">12</a></li>
+        <li><a href="{% url app-hour %}13">13</a></li>
+        <li><a href="{% url app-hour %}14">14</a></li>
+        <li><a href="{% url app-hour %}15">15</a></li>
+        <li><a href="{% url app-hour %}16">16</a></li>
+        <li><a href="{% url app-hour %}17">17</a></li>
+        <li><a href="{% url app-hour %}18">18</a></li>
+        <li><a href="{% url app-hour %}19">19</a></li>
+        <li><a href="{% url app-hour %}10">20</a></li>
+        <li><a href="{% url app-hour %}21">21</a></li>
+        <li><a href="{% url app-hour %}22">22</a></li>
+        <li><a href="{% url app-hour %}23">23</a></li>
+        <li><a href="{% url app-hour %}24">24</a></li>
+    </ul>
+
+</div>
+
+
+<div id="placeholder_depth" style="width:1000px;height:500px;"></div>
+
+
+<script id="source" language="javascript" type="text/javascript">
+function update_depth(data)
+    {
+        $.plot($("#placeholder_depth"), 
+           [data], { xaxis: { mode: "time" } }
+        );
+    }
+    
+    $.ajax({
+        {% if not hours %}
+        url: '{% url app-data %}{{mode}}/', 
+        {% else %}
+        url: '{% url app-data %}{{mode}}/{{hours}}/', 
+        {% endif %}
+        method: 'GET',
+        dataType: 'json',
+        success: update_depth
+        });
+</script>
+
+{% endblock content %}

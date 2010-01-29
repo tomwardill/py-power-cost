@@ -36,6 +36,10 @@ urlpatterns = patterns('',
         name='app-month'),
     url(r'^all_time/$', views.all_time,
         name='app-all_time'),
+        
+    # graphs with time limits
+    url(r'^hour/(?P<hours>\d{2})/$', views.hour,
+        name='app-hour-specific'),
 
     # little bit of a hack, but makes the graph templates cleaner
     url(r'^data/$', views.data,
@@ -43,6 +47,8 @@ urlpatterns = patterns('',
 
     url(r'^data/hour/$', views.data_hour,
         name='app-data_hour'),
+   url(r'^data/hour/(?P<hours>\d{2})/$', views.data_hour,
+        name='app-data_hour-specific'),
     url(r'^data/day/$', views.data_day,
         name='app-data_day'),
     url(r'^data/week/$', views.data_week,
