@@ -8,6 +8,11 @@
     </head>
     
     <body>
+        {% block pagetitle %}
+        {% endblock pagetitle %}
+        {% block menu %}
+            {% include "menu.frag.html" %}
+        {% endblock menu %}
         {% block content %}
         {% endblock content %}
     </body>
