@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block pagetitle %}
+<h2>Last day of power usage</h2>
+{% endblock pagetitle %}
+
+
+{% block content %}
+
+<div id="placeholder_depth" style="width:1000px;height:500px;"></div>
+
+
+<script id="source" language="javascript" type="text/javascript">
+function update_depth(data)
+    {
+        $.plot($("#placeholder_depth"), 
+           [data], { xaxis: { mode: "time" } }
+        );
+    }
+    
+    $.ajax({
+        url: '{% url app-data %}{{mode}}/', 
+        method: 'GET',
+        dataType: 'json',
+        success: update_depth
+        });
+</script>
+
+{% endblock content %}
