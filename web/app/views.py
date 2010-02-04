@@ -20,7 +20,7 @@ def default(request):
 def _process_message(data):
     """ Process a data message and save it """
 
-
+    
     reading_date = parser.parse(data['time'])
     try:
         # Check if the reading for this time already exists (ignore if so)
@@ -28,7 +28,7 @@ def _process_message(data):
         return False
     except:
         pass
-
+    
     # Save the reading into the DB
     reading = Reading()
     reading.time = reading_date
@@ -45,23 +45,23 @@ def _process_message(data):
 
 def bulk_upload(request):
     """ Receive and process a large amount of power messages at once """
-
+    
     if not request.method == 'POST':
         return HttpResponse('NoData')
-
+    
     post = request.POST
-
+    
     # unpack the data
     raw_data = json.loads(post['data'])
-
+    
     # assume that the data is a list/something iterable
     for data in raw_data:
         # process and save each one in the list
         _process_message(json.loads(data))
-
+    
     return HttpResponse('Upload')
 
-def upload(request):   
+def upload(request):
     """ Receive and process a single message """
     
     if not request.method == 'POST':
@@ -86,8 +86,8 @@ def raw_view(request):
     
     items = Reading.objects.all()
     
-    return render_to_response('raw.html', 
-                              {'items': items}, 
+    return render_to_response('raw.html',
+                              {'items': items},
                               context_instance = RequestContext(request))
 
 def data(request):
@@ -99,7 +99,7 @@ def hour(request, hours = None):
                               {'mode': 'hour',
                               'hours': hours},
                               context_instance = RequestContext(request))
-    
+
 def day(request):
     return render_to_response('day_graph.html',
                               {'mode': 'day'},
@@ -130,12 +130,38 @@ def data_hour(request, hours = None):
     json_data = json.dumps(graph_data)
     
     return HttpResponse(json_data)
-    
+
 def data_day(request):
-    previous_hour = datetime.now() - timedelta(days = 1)
-    
-    data = Reading.objects.filter(time__range = (previous_hour, datetime.now())).order_by('time')
-    graph_data = [[time.mktime(k.time.timetuple()) * 1000, float(k.ch1_wattage)] for k in data]
+    now = datetime.now()
+    previous_hour = now - timedelta(days = 1)
+
+    data = Reading.objects.filter(time__range = (previous_hour, now)).order_by('time')
+
+    averaged_data = []
+
+    lower_limit = previous_hour
+    upper_limit = previous_hour
+
+    for d in data:
+        upper_limit = lower_limit + timedelta(minutes = 1)
+        filter_data = data.filter(time__range = (lower_limit, upper_limit))
+        
+        # this will limit it to just the one recieving channel
+        # should probably be sorted
+        minute_average = {}
+        for f in filter_data:
+            minute_average['time'] = lower_limit
+            if minute_average.has_key('watt'):
+                minute_average['watt'] += float(f.ch1_wattage)
+            else:
+                minute_average['watt'] = float(f.ch1_wattage)
+            # Calculate the average
+        if minute_average.has_key('watt'):
+            minute_average['watt'] = minute_average['watt'] / len(filter_data)
+            averaged_data.append(minute_average)
+        lower_limit = upper_limit
+
+    graph_data = [[time.mktime(k['time'].timetuple()) * 1000, float(k['watt'])] for k in averaged_data]
     json_data = json.dumps(graph_data)
     
     return HttpResponse(json_data)
