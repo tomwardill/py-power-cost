@@ -139,27 +139,18 @@ def data_day(request):
 
     averaged_data = []
 
-    lower_limit = previous_hour
-    upper_limit = previous_hour
-
-    for d in data:
-        upper_limit = lower_limit + timedelta(minutes = 1)
-        filter_data = data.filter(time__range = (lower_limit, upper_limit))
-        
-        # this will limit it to just the one recieving channel
-        # should probably be sorted
-        minute_average = {}
-        for f in filter_data:
-            minute_average['time'] = lower_limit
-            if minute_average.has_key('watt'):
-                minute_average['watt'] += float(f.ch1_wattage)
+    for i in range(int(len(data) / 10)):
+        average_range = data[i*10:(i+1)*10]
+        d = {}
+        d['time'] = data[i*10].time
+        for a in average_range:
+            if d.has_key('watt'):
+                d['watt'] += a.ch1_wattage
             else:
-                minute_average['watt'] = float(f.ch1_wattage)
-            # Calculate the average
-        if minute_average.has_key('watt'):
-            minute_average['watt'] = minute_average['watt'] / len(filter_data)
-            averaged_data.append(minute_average)
-        lower_limit = upper_limit
+                d['watt'] = a.ch1_wattage
+        d['watt'] = d['watt'] / 10
+        averaged_data.append(d)
+    
 
     graph_data = [[time.mktime(k['time'].timetuple()) * 1000, float(k['watt'])] for k in averaged_data]
     json_data = json.dumps(graph_data)
