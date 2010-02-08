@@ -105,7 +105,9 @@ def day(request):
                               {'mode': 'day'},
                               context_instance = RequestContext(request))
 def week(request):
-    pass
+    return render_to_response('week_graph.html',
+                                {'mode': 'week'},
+                                context_instance = RequestContext(request))
 def month(request):
     pass
 def all_time(request):
@@ -157,7 +159,32 @@ def data_day(request):
     
     return HttpResponse(json_data)
 def data_week(request):
-    pass
+    now = datetime.now()
+    previous_week = now - timedelta(days = 1)
+
+    data = Reading.objects.filter(time__range = (previous_week, now)).order_by('time')
+
+    averaged_data = []
+
+    for i in range(int(len(data) / 600)):
+        average_range = data[i*600:(i+1)*600]
+        d = {}
+        d['time'] = data[i*600].time
+        for a in average_range:
+            if d.has_key('watt'):
+                d['watt'] += a.ch1_wattage
+            else:
+                d['watt'] = a.ch1_wattage
+
+        d['watt'] = d['watt'] / 600
+        averaged_data.append(d)
+
+
+    graph_data = [[time.mktime(k['time'].timetuple()) * 1000, float(k['watt'])] for k in averaged_data]
+    json_data = json.dumps(graph_data)
+
+    return HttpResponse(json_data)
+
 def data_month(request):
     pass
 def data_all_time(request):
