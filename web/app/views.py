@@ -160,7 +160,7 @@ def data_day(request):
     return HttpResponse(json_data)
 def data_week(request):
     now = datetime.now()
-    previous_week = now - timedelta(days = 1)
+    previous_week = now - timedelta(days = 7)
 
     data = Reading.objects.filter(time__range = (previous_week, now)).order_by('time')
 
