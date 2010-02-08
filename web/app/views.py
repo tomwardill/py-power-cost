@@ -186,12 +186,12 @@ def data_month(request):
     averaged_data = []
 
     while previous_month < now:
-        previous_plus_day = previous_week + timedelta(days = 1)
+        previous_plus_day = previous_month + timedelta(days = 1)
         data = Reading.objects.filter(time__range = (previous_month, previous_plus_day)).aggregate(day_average = Avg('ch1_wattage'), first_time = Min('time'))
         averaged_data.append(data)
         previous_month = previous_plus_day
 
-    graph_data = [[time.mktime(k['first_time'].timetuple()) * 1000, float(k['day_average'])] for k in averaged_data]
+    graph_data = [[time.mktime(k['first_time'].timetuple()) * 1000, float(k['day_average'])] for k in averaged_data if not k['first_time'] is None]
     json_data = json.dumps(graph_data)
 
     return HttpResponse(json_data)
