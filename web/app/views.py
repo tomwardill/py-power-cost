@@ -1,5 +1,3 @@
-# Create your views here.
-
 from models import Reading
 
 from datetime import datetime
@@ -111,7 +109,11 @@ def week(request):
                                 {'mode': 'week'},
                                 context_instance = RequestContext(request))
 def month(request):
-    pass
+    return render_to_response('month_graph.html',
+                                {'mode': 'month'},
+                                context_instance = RequestContext(request))
+
+
 def all_time(request):
     pass
 
@@ -178,6 +180,23 @@ def data_week(request):
     return HttpResponse(json_data)
 
 def data_month(request):
-    pass
+    now = datetime.now()
+    previous_month = now - timedelta(days = 30)
+
+    averaged_data = []
+
+    while previous_month < now:
+        previous_plus_day = previous_week + timedelta(days = 1)
+        data = Reading.objects.filter(time__range = (previous_month, previous_plus_day)).aggregate(day_average = Avg('ch1_wattage'), first_time = Min('time'))
+        averaged_data.append(data)
+        previous_month = previous_plus_day
+
+    graph_data = [[time.mktime(k['first_time'].timetuple()) * 1000, float(k['day_average'])] for k in averaged_data]
+    json_data = json.dumps(graph_data)
+
+    return HttpResponse(json_data)
+
+
+
 def data_all_time(request):
     pass
