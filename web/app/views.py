@@ -170,7 +170,7 @@ def data_week(request):
         previous_plus_hour = previous_week + timedelta(hours = 1)
         data = Reading.objects.filter(time__range = (previous_week, previous_plus_hour)).aggregate(hour_average = Avg('ch1_wattage'), first_time = Min('time'))
         averaged_data.append(data)
-        previous_week = previous_plus_hours
+        previous_week = previous_plus_hour
 
     graph_data = [[time.mktime(k['first_time'].timetuple()) * 1000, float(k['hour_average'])] for k in averaged_data]
     json_data = json.dumps(graph_data)
