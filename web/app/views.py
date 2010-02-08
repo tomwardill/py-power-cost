@@ -6,6 +6,8 @@ from datetime import datetime
 from django.http import HttpResponse, HttpResponseNotAllowed
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from django.db.models import Avg, Min
+
 import simplejson as json
 from decimal import Decimal
 from dateutil import parser
@@ -162,25 +164,14 @@ def data_week(request):
     now = datetime.now()
     previous_week = now - timedelta(days = 7)
 
-    data = Reading.objects.filter(time__range = (previous_week, now)).order_by('time')
-
     averaged_data = []
 
-    for i in range(int(len(data) / 600)):
-        average_range = data[i*600:(i+1)*600]
-        d = {}
-        d['time'] = data[i*600].time
-        for a in average_range:
-            if d.has_key('watt'):
-                d['watt'] += a.ch1_wattage
-            else:
-                d['watt'] = a.ch1_wattage
+    while previous_week < now:
+        data = Reading.objects.filter(time__range = (previous_week, now)).aggregate(hour_average = Avg('ch1_wattage'), first_time = Min('time'))
+        averaged_data.append(data)
+        previous_week += timedelta(hours = 1)
 
-        d['watt'] = d['watt'] / 600
-        averaged_data.append(d)
-
-
-    graph_data = [[time.mktime(k['time'].timetuple()) * 1000, float(k['watt'])] for k in averaged_data]
+    graph_data = [[time.mktime(k['first_time'].timetuple()) * 1000, float(k['hour_average'])] for k in averaged_data]
     json_data = json.dumps(graph_data)
 
     return HttpResponse(json_data)
