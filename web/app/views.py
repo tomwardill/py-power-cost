@@ -155,12 +155,22 @@ def data_day(request):
                 d['watt'] += a.ch1_wattage
             else:
                 d['watt'] = a.ch1_wattage
+
+            # add average temperature
+            if d.has_key('temp'):
+                d['temp'] += a.temperature
+            else:
+                d['temp'] = a.temperature
+        
+        # perform the averages
         d['watt'] = d['watt'] / 10
+        d['temp'] = d['temp'] / 10
         averaged_data.append(d)
     
 
     graph_data = [[time.mktime(k['time'].timetuple()) * 1000, float(k['watt'])] for k in averaged_data]
-    json_data = json.dumps(graph_data)
+    temp_data = [[time.mktime(k['time'].timetuple()) * 1000, float(k['temp'])] for k in averaged_data]
+    json_data = json.dumps([graph_data, temp_data])
     
     return HttpResponse(json_data)
 def data_week(request):
