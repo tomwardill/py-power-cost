@@ -14,7 +14,9 @@
 function update_depth(data)
     {
         $.plot($("#placeholder_depth"), 
-           [data], { xaxis: { mode: "time" } }
+           [ { data: data[0], label: "kWh" },
+	     { data: data[1], label: "Temperature", yaxis: 2} ], 
+		{ xaxis: { mode: "time" } }
         );
     }
     
