@@ -181,12 +181,13 @@ def data_week(request):
 
     while previous_week < now:
         previous_plus_hour = previous_week + timedelta(hours = 1)
-        data = Reading.objects.filter(time__range = (previous_week, previous_plus_hour)).aggregate(hour_average = Avg('ch1_wattage'), first_time = Min('time'))
+        data = Reading.objects.filter(time__range = (previous_week, previous_plus_hour)).aggregate(temp_average = Avg('temperature'), hour_average = Avg('ch1_wattage'), first_time = Min('time'))
         averaged_data.append(data)
         previous_week = previous_plus_hour
 
-    graph_data = [[time.mktime(k['first_time'].timetuple()) * 1000, float(k['hour_average'])] for k in averaged_data]
-    json_data = json.dumps(graph_data)
+    graph_data = [[time.mktime(k['first_time'].timetuple()) * 1000, float(k['hour_average'])] for k in averaged_data if k['first_time']]
+    temp_data = [[time.mktime(k['first_time'].timetuple()) * 1000, float(k['temp_average'])] for k in averaged_data if k['first_time']]
+    json_data = json.dumps([graph_data, temp_data])
 
     return HttpResponse(json_data)
 
