@@ -133,7 +133,8 @@ def data_hour(request, hours = None):
     
     data = Reading.objects.filter(time__range = (previous_hour, current_hour)).order_by('time')
     graph_data = [[time.mktime(k.time.timetuple()) * 1000, float(k.ch1_wattage)] for k in data]
-    json_data = json.dumps(graph_data)
+    temp_data = [[time.mktime(k.time.timetuple()) * 1000, float(k.temperature)] for k in data]
+    json_data = json.dumps([graph_data, temp_data])
     
     return HttpResponse(json_data)
 
